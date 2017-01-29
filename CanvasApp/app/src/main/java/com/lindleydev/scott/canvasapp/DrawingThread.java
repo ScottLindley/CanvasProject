@@ -6,11 +6,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 
 import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by Scott on 1/28/17.
@@ -19,11 +16,15 @@ public class DrawingThread extends Thread implements SensorEventListener{
     private DrawingView mView;
     private Sensor mSensor;
     private SensorManager mSensorManager;
-    private int[] mXYZ;
+    private float[] mXYZ;
+    private int mViewWidth;
+    private int mViewHeight;
     private boolean mRun;
 
     public DrawingThread(DrawingView view) {
         mView = view;
+        mViewWidth = view.getWidth();
+        mViewHeight = view.getHeight();
         mRun = true;
     }
 
@@ -33,7 +34,7 @@ public class DrawingThread extends Thread implements SensorEventListener{
         if (mView.getSimNumber() == 1) {
             startSim1Loop();
         } else {
-            mXYZ = new int[3];
+            mXYZ = new float[3];
             setUpAccelerometer();
             startSim2Loop();
         }
@@ -78,12 +79,42 @@ public class DrawingThread extends Thread implements SensorEventListener{
                 Circle c = circles.get(i);
                 int[] color = c.getColor();
                 mView.getPaint().setColor(Color.argb(130, color[0], color[1], color[2]));
-                mView.drawCircle(c.getX(), c.getY(), c.getRadius());
+                if (c.getRadius() > 0) {
+                    mView.drawCircle(c.getX(), c.getY(), c.getRadius());
+                }
+                double baseSpeed = c.getFallSpeedFactor();
+                setNewXY(c, (float) baseSpeed);
+
             }
             mView.commitDrawing();
         }
         mSensorManager.unregisterListener(this);
     }
+
+
+    private void setNewXY(Circle c, float baseSpeed) {
+        float speedX = baseSpeed * mXYZ[0] / 10;
+        float speedY = baseSpeed * mXYZ[1] / 10;
+
+        boolean atTop = c.getY()-c.getRadius() <= 0;
+        boolean atBottom = c.getY()+c.getRadius() >= mViewHeight;
+        boolean atRight = c.getX()+c.getRadius() >= mViewWidth;
+        boolean atLeft = c.getX()-c.getRadius() <= 0;
+
+        if (!atRight && speedX < 0) {
+            c.setX(c.getX() - speedX);
+        }
+        if (!atLeft && speedX > 0) {
+            c.setX(c.getX() - speedX);
+        }
+        if (!atTop && speedY < 0){
+            c.setY(c.getY() + speedY);
+        }
+        if (!atBottom && speedY > 0){
+            c.setY(c.getY() + speedY);
+        }
+    }
+
 
     private void setUpAccelerometer(){
         mSensorManager =
@@ -99,18 +130,21 @@ public class DrawingThread extends Thread implements SensorEventListener{
         float y = values[1];
         float z = values[2];
 
-        float prevX = mXYZ[0];
-        float prevY = mXYZ[1];
-        float prevZ = mXYZ[2];
+        mXYZ[0] = x;
+        mXYZ[1] = y;
+        mXYZ[2] = z;
 
-        if (y > 0){
-            //move it down
-        }
-        if (y < 0){
-            //move it up
-        }
+//        if (y > 0){
+//            //move it down
+//            for (Circle c : mView.getCircles()){
+//                c.setY(c.getY()-);
+//            }
+//        }
+//        if (y < 0){
+//            //move it up
+//        }
 
-        Log.d(TAG, "x,y,z =  "+x +", "+y +", "+z);
+//        Log.d(TAG, "x,y,z =  "+x +", "+y +", "+z);
     }
 
     @Override

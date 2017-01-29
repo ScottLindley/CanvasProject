@@ -90,8 +90,8 @@ public class DrawingView extends SurfaceView implements SurfaceHolder.Callback {
                             pointer.getY(),
                             pointer.getRadius(),
                             pointer.getColor()));
-                mPointers.remove(pointer);
                 }
+                mPointers.remove(pointer);
                 break;
             case MotionEvent.ACTION_MOVE:
                 int pointerCount = event.getPointerCount();

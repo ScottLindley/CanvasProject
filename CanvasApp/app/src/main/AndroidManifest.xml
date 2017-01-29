@@ -17,7 +17,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".Sim1Activity">
+        <activity
+            android:name=".Sim1Activity"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".Sim2Activity"

@@ -9,6 +9,7 @@ public class Circle {
     private float mX;
     private float mY;
     private float radius = 1;
+    private double fallSpeedFactor;
     private int[] mColor;
 
     public Circle(float x, float y, float radius, int[] color) {
@@ -16,6 +17,7 @@ public class Circle {
         mY = y;
         this.radius = radius;
         mColor = color;
+        fallSpeedFactor = Math.random() * 10;
     }
 
     public float getX() {
@@ -46,7 +48,7 @@ public class Circle {
         return mColor;
     }
 
-    public void setColor(int[] color) {
-        mColor = color;
+    public double getFallSpeedFactor() {
+        return fallSpeedFactor;
     }
 }
