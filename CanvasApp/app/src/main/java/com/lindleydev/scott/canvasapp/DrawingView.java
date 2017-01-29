@@ -1,5 +1,6 @@
 package com.lindleydev.scott.canvasapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -19,20 +20,16 @@ import java.util.List;
  * Created by Scott on 1/28/17.
  */
 public class DrawingView extends SurfaceView implements SurfaceHolder.Callback {
-    private static final String TAG = "DrawingView";
     private DrawingThread mThread;
     private Paint mPaint;
     private Canvas mCanvas;
-    private SurfaceHolder mHolder;
     private List<Pointer> mPointers;
 
     public DrawingView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mPaint = new Paint();
-        mPaint.setAlpha(130);
-        mHolder = getHolder();
-        mHolder.addCallback(this);
+        getHolder().addCallback(this);
         mPointers = new ArrayList<>();
+        mPaint = new Paint();
     }
 
     @Override
@@ -43,16 +40,14 @@ public class DrawingView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-        mThread.setRunning(false);
     }
 
     public void beginDrawing(){
-        mCanvas = mHolder.lockCanvas();
+        mCanvas = getHolder().lockCanvas();
         mCanvas.drawColor(Color.WHITE);
     }
 
@@ -61,7 +56,7 @@ public class DrawingView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void commitDrawing(){
-        mHolder.unlockCanvasAndPost(mCanvas);
+        getHolder().unlockCanvasAndPost(mCanvas);
         mCanvas = null;
     }
 
@@ -77,12 +72,10 @@ public class DrawingView extends SurfaceView implements SurfaceHolder.Callback {
                         event.getX(event.findPointerIndex(id)),
                         event.getY(event.findPointerIndex(id)),
                         getRandomPaintColor()));
-                Log.d(TAG, "onTouchEvent: ADDED ID = " + id);
                 Collections.sort(mPointers);
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
-                Log.d(TAG, "onTouchEvent: REMOVED ID = " + id);
                 mPointers.remove(mPointers.get(event.findPointerIndex(id)));
                 break;
             case MotionEvent.ACTION_CANCEL:
@@ -114,5 +107,9 @@ public class DrawingView extends SurfaceView implements SurfaceHolder.Callback {
 
     public Paint getPaint() {
         return mPaint;
+    }
+
+    public DrawingThread getThread() {
+        return mThread;
     }
 }
