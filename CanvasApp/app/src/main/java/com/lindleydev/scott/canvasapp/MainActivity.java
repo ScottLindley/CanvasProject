@@ -1,34 +1,36 @@
 package com.lindleydev.scott.canvasapp;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.RelativeLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
-
-    private DrawingView mDrawingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
 
+        setUpButtons();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (mDrawingView.getThread() != null && mDrawingView.getThread().isRunning()) {
-            mDrawingView.getThread().setRunning(false);
-        }
-        ((RelativeLayout)findViewById(R.id.layout)).removeAllViews();
+    private void setUpButtons(){
+        findViewById(R.id.sim_1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, Sim1Activity.class));
+            }
+        });
+
+        findViewById(R.id.sim_2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, Sim2Activity.class));
+            }
+        });
     }
 
-    @Override
-    protected void onResume() {
-        setContentView(R.layout.activity_main);
-        mDrawingView = (DrawingView)findViewById(R.id.drawing_view);
-        super.onResume();
-    }
+
 }

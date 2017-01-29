@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
     tools:context="com.lindleydev.scott.canvasapp.MainActivity">
 
-    <com.lindleydev.scott.canvasapp.DrawingView
-        android:id="@+id/drawing_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</RelativeLayout>
+    <Button
+        android:id="@+id/sim_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Simulation 1"
+        android:layout_marginBottom="64dp"/>
+    <Button
+        android:id="@+id/sim_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Simulation 2"/>
+</LinearLayout>

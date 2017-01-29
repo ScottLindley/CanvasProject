@@ -1,13 +1,11 @@
 package com.lindleydev.scott.canvasapp;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -24,11 +22,19 @@ public class DrawingView extends SurfaceView implements SurfaceHolder.Callback {
     private Paint mPaint;
     private Canvas mCanvas;
     private List<Pointer> mPointers;
+    private List<Circle> mCircles;
+    private int mSimNumber;
 
     public DrawingView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        if (context instanceof Sim1Activity){
+            mSimNumber = 1;
+        } else {
+            mSimNumber = 2;
+        }
         getHolder().addCallback(this);
         mPointers = new ArrayList<>();
+        mCircles = new ArrayList<>();
         mPaint = new Paint();
     }
 
@@ -65,6 +71,7 @@ public class DrawingView extends SurfaceView implements SurfaceHolder.Callback {
         int index = event.getActionIndex();
         int id = event.getPointerId(index);
         int action = MotionEventCompat.getActionMasked(event);
+
         switch (action) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
@@ -76,13 +83,19 @@ public class DrawingView extends SurfaceView implements SurfaceHolder.Callback {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
-                mPointers.remove(mPointers.get(event.findPointerIndex(id)));
-                break;
-            case MotionEvent.ACTION_CANCEL:
+                Pointer pointer = mPointers.get(event.findPointerIndex(id));
+                if (mSimNumber == 2) {
+                    mCircles.add(new Circle(
+                            pointer.getX(),
+                            pointer.getY(),
+                            pointer.getRadius(),
+                            pointer.getColor()));
+                mPointers.remove(pointer);
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
                 int pointerCount = event.getPointerCount();
-                for (int i=0; i<pointerCount; i++){
+                for (int i = 0; i < pointerCount; i++) {
                     int pointerID = event.getPointerId(i);
                     mPointers.get(event.findPointerIndex(pointerID))
                             .setX(event.getX(event.findPointerIndex(pointerID)));
@@ -98,6 +111,10 @@ public class DrawingView extends SurfaceView implements SurfaceHolder.Callback {
         return mPointers;
     }
 
+    public List<Circle> getCircles() {
+        return mCircles;
+    }
+
     public int[] getRandomPaintColor(){
         int red = (int) (Math.random() * 256);
         int green = (int) (Math.random() * 256);
@@ -111,5 +128,9 @@ public class DrawingView extends SurfaceView implements SurfaceHolder.Callback {
 
     public DrawingThread getThread() {
         return mThread;
+    }
+
+    public int getSimNumber() {
+        return mSimNumber;
     }
 }
