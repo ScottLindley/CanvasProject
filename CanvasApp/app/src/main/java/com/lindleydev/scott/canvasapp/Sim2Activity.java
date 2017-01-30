@@ -1,10 +1,9 @@
 package com.lindleydev.scott.canvasapp;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 public class Sim2Activity extends AppCompatActivity {
-
     private DrawingView mDrawingView;
 
     @Override

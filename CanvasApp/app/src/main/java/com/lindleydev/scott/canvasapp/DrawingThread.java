@@ -6,19 +6,22 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
 
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Scott on 1/28/17.
  */
 public class DrawingThread extends Thread implements SensorEventListener{
-    private static final int SHAKE_THRESHOLD = 800;
+    private static final int SHAKE_THRESHOLD = 900;
     private DrawingView mView;
     private Sensor mSensor;
     private SensorManager mSensorManager;
     private float[] mXYZ;
-    private long mLastTime;
+    private long mLastTime = 1;
     private int mViewWidth;
     private int mViewHeight;
     private boolean mRun;
@@ -143,8 +146,8 @@ public class DrawingThread extends Thread implements SensorEventListener{
         mXYZ[2] = z;
 
         float phoneSpeed = Math.abs(x+y+z - lastX - lastY -lastZ)/timeDiff *1000;
-
         if (phoneSpeed > SHAKE_THRESHOLD){
+            Log.d(TAG, "onSensorChanged: "+phoneSpeed);
             mView.getCircles().removeAll(mView.getCircles());
         }
 
@@ -163,5 +166,7 @@ public class DrawingThread extends Thread implements SensorEventListener{
     public void setRunning(boolean mRun) {
         this.mRun = mRun;
     }
+
+
 
 }
