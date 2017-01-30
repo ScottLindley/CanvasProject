@@ -13,10 +13,12 @@ import java.util.List;
  * Created by Scott on 1/28/17.
  */
 public class DrawingThread extends Thread implements SensorEventListener{
+    private static final int SHAKE_THRESHOLD = 800;
     private DrawingView mView;
     private Sensor mSensor;
     private SensorManager mSensorManager;
     private float[] mXYZ;
+    private long mLastTime;
     private int mViewWidth;
     private int mViewHeight;
     private boolean mRun;
@@ -125,26 +127,28 @@ public class DrawingThread extends Thread implements SensorEventListener{
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
+        long currentTime = System.currentTimeMillis();
+        long timeDiff = currentTime - mLastTime;
         float[] values = sensorEvent.values;
         float x = values[0];
         float y = values[1];
         float z = values[2];
 
+        float lastX = mXYZ[0];
+        float lastY = mXYZ[1];
+        float lastZ = mXYZ[2];
+
         mXYZ[0] = x;
         mXYZ[1] = y;
         mXYZ[2] = z;
 
-//        if (y > 0){
-//            //move it down
-//            for (Circle c : mView.getCircles()){
-//                c.setY(c.getY()-);
-//            }
-//        }
-//        if (y < 0){
-//            //move it up
-//        }
+        float phoneSpeed = Math.abs(x+y+z - lastX - lastY -lastZ)/timeDiff *1000;
 
-//        Log.d(TAG, "x,y,z =  "+x +", "+y +", "+z);
+        if (phoneSpeed > SHAKE_THRESHOLD){
+            mView.getCircles().removeAll(mView.getCircles());
+        }
+
+        mLastTime = currentTime;
     }
 
     @Override
