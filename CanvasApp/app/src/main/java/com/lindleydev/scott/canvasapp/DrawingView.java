@@ -42,6 +42,15 @@ public class DrawingView extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         mThread = new DrawingThread(this);
         mThread.start();
+        if (mSimNumber == 1){
+            for (int i=1; i<2; i++){
+                Circle circle = new Circle(
+                        getWidth()/2, getHeight()/2, 50,
+                        new int[]{255, 10, 10});
+                circle.setFallSpeedFactor(30);
+                mCircles.add(circle);
+            }
+        }
     }
 
     @Override

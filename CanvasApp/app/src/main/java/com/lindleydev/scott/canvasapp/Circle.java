@@ -8,16 +8,18 @@ public class Circle {
 
     private float mX;
     private float mY;
-    private float radius = 1;
+    private float mRadius = 1;
+    private float[] mVelocity;
     private double fallSpeedFactor;
     private int[] mColor;
 
     public Circle(float x, float y, float radius, int[] color) {
         mX = x;
         mY = y;
-        this.radius = radius;
+        mRadius = radius;
         mColor = color;
         fallSpeedFactor = Math.random() * 10;
+        mVelocity = new float[]{0, 0};
     }
 
     public float getX() {
@@ -37,11 +39,11 @@ public class Circle {
     }
 
     public float getRadius() {
-        return radius;
+        return mRadius;
     }
 
     public void setRadius(float radius) {
-        this.radius = radius;
+        this.mRadius = radius;
     }
 
     public int[] getColor() {
@@ -50,5 +52,17 @@ public class Circle {
 
     public double getFallSpeedFactor() {
         return fallSpeedFactor;
+    }
+
+    public void setFallSpeedFactor(double factor){
+        fallSpeedFactor = factor;
+    }
+
+    public float[] getVelocity(){
+        return mVelocity;
+    }
+
+    public void setVelocity(float[] velocity){
+        mVelocity = velocity;
     }
 }

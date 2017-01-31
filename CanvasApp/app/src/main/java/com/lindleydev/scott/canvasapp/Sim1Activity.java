@@ -2,6 +2,7 @@ package com.lindleydev.scott.canvasapp;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager;
 
 public class Sim1Activity extends AppCompatActivity {
     private DrawingView mDrawingView;
@@ -10,6 +11,8 @@ public class Sim1Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     @Override
