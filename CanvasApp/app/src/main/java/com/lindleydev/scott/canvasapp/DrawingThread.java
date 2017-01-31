@@ -168,7 +168,7 @@ public class DrawingThread extends Thread implements SensorEventListener{
             }
         }
         if (c.getVelocity()[1] < 0) {
-            if (!borders[1] && ){
+            if (!borders[1]){
                 Log.d(TAG, "NOT AT TOP");
                 //not at top border with negative y velocity
                 c.setY(position[1]);
@@ -181,7 +181,9 @@ public class DrawingThread extends Thread implements SensorEventListener{
         if (c.getVelocity()[0] > 0){
             if (!borders[2]) {
                 //not at right border with positive x velocity
-                c.setX(position[0]);
+                if (!borders[0]) {
+                    c.setX(position[0]);
+                }
             } else {
                 float vCollision = (float) (c.getVelocity()[0]*(-0.62));
                 c.setVelocity(new float[]{vCollision, c.getVelocity()[1]});
@@ -190,7 +192,9 @@ public class DrawingThread extends Thread implements SensorEventListener{
         if (c.getVelocity()[1] > 0){
             if (!borders[3]){
                 //not at bottom border with positive y velocity
-                c.setY(position[1]);
+                if (!borders[1]) {
+                    c.setY(position[1]);
+                }
             } else {
                 float vCollision = (float) (c.getVelocity()[1]*(-0.62));
                 c.setVelocity(new float[]{c.getVelocity()[0], vCollision});
