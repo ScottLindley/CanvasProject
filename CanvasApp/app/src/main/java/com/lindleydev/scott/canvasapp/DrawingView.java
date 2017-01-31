@@ -6,23 +6,27 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by Scott on 1/28/17.
  */
 public class DrawingView extends SurfaceView implements SurfaceHolder.Callback {
+    private static final String TAG = "DrawingView";
     private DrawingThread mThread;
     private Paint mPaint;
     private Canvas mCanvas;
     private List<Pointer> mPointers;
-    private List<Circle> mCircles;
+    private LinkedList<Circle> mCircles;
+    private ArrayList<Circle> mCircleArrayList;
     private int mSimNumber;
 
     public DrawingView(Context context, AttributeSet attrs) {
@@ -34,23 +38,28 @@ public class DrawingView extends SurfaceView implements SurfaceHolder.Callback {
         }
         getHolder().addCallback(this);
         mPointers = new ArrayList<>();
-        mCircles = new ArrayList<>();
+        mCircles = new LinkedList<>();
+        mCircleArrayList = new ArrayList<>();
         mPaint = new Paint();
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
+        int number = 2;
+        int radius = 55;
         mThread = new DrawingThread(this);
         mThread.start();
         if (mSimNumber == 1){
-            for (int i=1; i<2; i++){
-                Circle circle = new Circle(
-                        getWidth()/2, getHeight()/2, 50,
-                        new int[]{255, 10, 10});
+            for (int i=1; i<number+1; i++){
+                Circle circle = new Circle(i-1,
+                        i*radius*3, 70, radius,
+                        getRandomPaintColor());
                 circle.setFallSpeedFactor(30);
                 mCircles.add(circle);
+                mCircleArrayList.add(circle);
             }
         }
+        Log.d(TAG, "size = " +mCircles.size());
     }
 
     @Override
@@ -95,6 +104,7 @@ public class DrawingView extends SurfaceView implements SurfaceHolder.Callback {
                 Pointer pointer = mPointers.get(event.findPointerIndex(id));
                 if (mSimNumber == 2) {
                     mCircles.add(new Circle(
+                            id,
                             pointer.getX(),
                             pointer.getY(),
                             pointer.getRadius(),
@@ -120,7 +130,11 @@ public class DrawingView extends SurfaceView implements SurfaceHolder.Callback {
         return mPointers;
     }
 
-    public List<Circle> getCircles() {
+    public ArrayList<Circle> getCircleArray(){
+        return mCircleArrayList;
+    }
+
+    public LinkedList<Circle> getCircles() {
         return mCircles;
     }
 

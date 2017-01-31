@@ -8,12 +8,14 @@ public class Circle {
 
     private float mX;
     private float mY;
+    private int mID;
     private float mRadius = 1;
     private float[] mVelocity;
     private double fallSpeedFactor;
     private int[] mColor;
 
-    public Circle(float x, float y, float radius, int[] color) {
+    public Circle(int id, float x, float y, float radius, int[] color) {
+        mID = id;
         mX = x;
         mY = y;
         mRadius = radius;
@@ -64,5 +66,9 @@ public class Circle {
 
     public void setVelocity(float[] velocity){
         mVelocity = velocity;
+    }
+
+    public int getID(){
+        return mID;
     }
 }
